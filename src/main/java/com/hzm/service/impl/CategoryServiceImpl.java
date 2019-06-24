@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
@@ -20,11 +22,28 @@ public class CategoryServiceImpl implements CategoryService {
 
         return categoryInterface.insert(category);
     }
+    @Transactional
+    @Override
+    public List<Category> list() {
+
+
+       // PageHelper.startPage(pager, rows);
+
+        List<Category> all = categoryInterface.findAll();
+
+        return all;
+    }
 
     @Transactional(readOnly = true)
     @Override
     public Category get(Integer id) {
         return categoryInterface.get(id);
+    }
+
+    @Transactional
+    @Override
+    public int put(Category category) {
+        return categoryInterface.update(category);
     }
 
 
