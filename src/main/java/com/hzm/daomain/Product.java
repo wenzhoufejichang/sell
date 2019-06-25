@@ -50,6 +50,8 @@ public class Product implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date update_time;
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

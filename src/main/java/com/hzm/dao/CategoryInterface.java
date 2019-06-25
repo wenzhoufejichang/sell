@@ -21,7 +21,7 @@ public interface CategoryInterface {
     @Results(value = {@Result(id = true, column = "category_id", property = "category_id"),
             @Result(column = "category_name", property = "category_name"),
                                         //一对多建议懒加载			//主表的主键字段给select = "findByL"提供值
-            @Result(many = @Many(select = "com.hzm.dao.ProductInterface.findByCategory", fetchType = FetchType.LAZY), column = "category_id", property = "set")})
+            @Result(many = @Many(select = "com.hzm.dao.ProductInterface.findByCategoryId", fetchType = FetchType.LAZY), column = "category_id", property = "set")})
     public abstract List<Category> findAll();
 
 }
