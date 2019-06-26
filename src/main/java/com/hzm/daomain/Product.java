@@ -1,6 +1,9 @@
 package com.hzm.daomain;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +20,7 @@ import java.util.Objects;
 @JsonIgnoreProperties(value = {"handler"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Product implements Serializable {
+
 
 //    CREATE TABLE `product_info` (
 //            `product_id` VARCHAR (32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'id',
@@ -37,7 +41,7 @@ public class Product implements Serializable {
     private String product_id;
     @JsonProperty("name")
     private String product_name;
-    @JsonProperty("price")
+     @JsonProperty("price")
     private Double product_price;
     private Integer product_store;
     @JsonProperty("description")
@@ -49,7 +53,6 @@ public class Product implements Serializable {
     private Date create_time;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date update_time;
-
 
 
     @Override

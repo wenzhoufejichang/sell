@@ -1,8 +1,8 @@
 package com.hzm.daomain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -12,10 +12,9 @@ import java.util.Date;
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(value = {"handler"})
-//@JsonFilter("no")
 public class Order_details {
 
-//    CREATE TABLE `order_details` (
+    //    CREATE TABLE `order_details` (
 //            `detail_id` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'id',
 //            `order_id` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
 //  `product_id` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'id',
@@ -29,18 +28,22 @@ public class Order_details {
 //    KEY `order_details_order_id` (`order_id`),
 //    CONSTRAINT `order_details_order_id` FOREIGN KEY (`order_id`) REFERENCES `order_master` (`order_id`)
 //            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-
+    @JsonProperty("detailId")
     private String detail_id;
+    @JsonProperty("orderId")
     private Order_Master order_id;
-
+    @JsonProperty("productId")
     private String product_id;
+    @JsonProperty("productName")
     private String product_name;
+    @JsonProperty("productPrice")
     private Double product_price;
+    @JsonProperty("productQuantity")
     private int product_number;
+    @JsonProperty("productIcon")
     private String product_image;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //@JsonProperty("productId")
     private Date create_time;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-
+    //@JsonProperty("productId")
     private Date update_time;
 }

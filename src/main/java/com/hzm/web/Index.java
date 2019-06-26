@@ -2,7 +2,6 @@ package com.hzm.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hzm.utils.JsonUtils;
 import com.hzm.daomain.Category;
 import com.hzm.daomain.Order_Master;
 import com.hzm.daomain.Order_details;
@@ -16,6 +15,7 @@ import com.hzm.service.ProductService;
 import com.hzm.vo.OrderRestlt;
 import com.hzm.vo.Results;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +37,9 @@ public class Index {
     private ProductService productService;
     @Autowired
     private Order_details_Service order_details_service;
+
+    @Value("${size}")
+    private String size;
 
     @PostMapping("/add")
     public Integer add(String category_name) {
@@ -76,6 +79,10 @@ public class Index {
 
     }
 
+    /**
+     * 测试颜色
+     */
+
     @GetMapping("/buyer/product/list")
     public Results<Category> list() {
 
@@ -100,7 +107,7 @@ public class Index {
 //        address: "慕课网总部"
 //        openid: "ew3euwhd7sjw9diwkq" //用户的微信openid
         List<Order_details> list = new ArrayList<>();
-        Order_Master order_master = new Order_Master(null, name, phone, address, openid, null, 0, 0, null, null);
+        Order_Master order_master = new Order_Master(null, name, phone, address, openid, null, 0, 0, null, null, null);
         for (int i = 0; i < productId.length; i++) {
             Order_details order_detail = new Order_details();
             order_detail.setProduct_id(productId[i]);
@@ -110,6 +117,7 @@ public class Index {
         }
         OrderRestlt<Order_Master> order_masterOrderRestlt = new OrderRestlt<>();
         String writeValueAsString = null;
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
             List<Order_details> byProductIds = order_details_service.findByProductIds(list);
             BigDecimal bigDecimal = BigDecimal.valueOf(0);
@@ -122,18 +130,18 @@ public class Index {
             order_master.setTotal_order_amount(bigDecimal.doubleValue());
 
 
-
-
             order_master_service.add(order_master, byProductIds);
             order_masterOrderRestlt.setCode(CodeEum.SUCCESS.getCode());
             order_masterOrderRestlt.setMsg(CodeEum.SUCCESS.getMessage());
-            order_masterOrderRestlt.setData(order_master);
+            Order_Master orderMaster = new Order_Master();
+            orderMaster.setOrder_id(order_master.getOrder_id());
+            order_masterOrderRestlt.setData(orderMaster);
 
 
-            String[] value = {"buy_name", "buy_phone", "update_time", "buy_address", "buy_openid",
-                    "total_order_amount", "order_status", "pay_status", "create_time"};
-
-            ObjectMapper objectMapper = JsonUtils.getonObjectMapper("Order_Master", value);
+//            String[] value = {"buy_name", "buy_phone", "update_time", "buy_address", "buy_openid",
+//                    "total_order_amount", "order_status", "pay_status", "create_time"};
+//
+//            ObjectMapper objectMapper = JsonUtils.getonObjectMapper("Order_Master", value);
             writeValueAsString = objectMapper.writeValueAsString(order_masterOrderRestlt);
 
         } catch (Exception e) {
@@ -159,7 +167,7 @@ public class Index {
             }
 
             order_masterOrderRestlt.setData(null);
-            ObjectMapper objectMapper = new ObjectMapper();
+
             try {
                 writeValueAsString = objectMapper.writeValueAsString(order_masterOrderRestlt);
             } catch (JsonProcessingException e1) {
@@ -167,6 +175,69 @@ public class Index {
             }
         }
         return writeValueAsString;
+
+    }
+
+    @GetMapping("/buyer/order/list")
+    public OrderRestlt<List<Order_Master>> orderlist(@RequestParam(defaultValue = "1") int page) {
+
+        List<Order_Master> list = order_master_service.list(page, size);
+
+        OrderRestlt<List<Order_Master>> orderRestlt = new OrderRestlt<>();
+
+        orderRestlt.setData(list);
+        orderRestlt.setCode(CodeEum.SUCCESS.getCode());
+        orderRestlt.setMsg(CodeEum.SUCCESS.getMessage());
+
+
+        return orderRestlt;
+
+    }
+
+    @GetMapping("/buyer/order/detail")
+    public OrderRestlt<Order_Master> details(@RequestParam String openid, @RequestParam String orderId) {
+        Order_Master order_master = new Order_Master();
+        order_master.setOrder_id(orderId);
+        order_master.setBuy_openid(openid);
+
+        Order_Master details = order_master_service.details(order_master);
+
+        OrderRestlt<Order_Master> restlt = new OrderRestlt<>();
+        restlt.setCode(CodeEum.SUCCESS.getCode());
+        restlt.setMsg(CodeEum.SUCCESS.getMessage());
+        restlt.setData(details);
+        return restlt;
+
+    }
+
+    @GetMapping("/buyer/order/cancel")
+    public OrderRestlt<Object> cacle(@RequestParam String openid, @RequestParam String orderId) {
+        Order_Master order_master = new Order_Master();
+        order_master.setBuy_openid(openid);
+        order_master.setOrder_id(orderId);
+
+        OrderRestlt<Object> objectOrderRestlt = new OrderRestlt<>();
+        try {
+            order_master_service.cacle(order_master);
+            objectOrderRestlt.setCode(CodeEum.SUCCESS.getCode());
+            objectOrderRestlt.setMsg(CodeEum.SUCCESS.getMessage());
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            if (e.getClass() == NotExist_Product.class) {
+                objectOrderRestlt.setCode(CodeEum.NOORDEREXIST.getCode());
+                objectOrderRestlt.setMsg(CodeEum.NOORDEREXIST.getMessage());
+            } else {
+
+
+                objectOrderRestlt.setCode(CodeEum.NOOKNOW.getCode());
+                objectOrderRestlt.setMsg(CodeEum.NOOKNOW.getMessage());
+            }
+
+        }
+
+        return objectOrderRestlt;
 
     }
 

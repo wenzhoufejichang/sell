@@ -10,6 +10,10 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     password: 123456
     username: root
+  http:
+    converters:
+      preferred-json-mapper: gson
+
 mybatis:
     type-aliases-package: com.hzm.domian
     configuration:
@@ -17,3 +21,8 @@ mybatis:
       aggressive-lazy-loading: false
 pagehelper:
   helper-dialect: mysql
+
+
+
+
+size:  3

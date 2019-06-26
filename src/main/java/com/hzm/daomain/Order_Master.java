@@ -1,22 +1,23 @@
 package com.hzm.daomain;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.Date;
+import java.util.Set;
+
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(value = {"handler"})
-@JsonFilter("Order_Master")
+//@JsonFilter("Order_Master")
 public class Order_Master {
 
     //    CREATE TABLE `order_master` (
@@ -33,21 +34,29 @@ public class Order_Master {
 //    PRIMARY KEY (`order_id`),
 //    KEY `buy_openid` (`buy_openid`)
 //            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    @JsonProperty("orderId")
     private String order_id;
+    @JsonProperty("buyerName")
     private String buy_name;
-
+    @JsonProperty("buyerPhone")
     private String buy_phone;
+    @JsonProperty("buyerAddress")
     private String buy_address;
+    @JsonProperty("buyerOpenid")
     private String buy_openid;
+    @JsonProperty("orderAmount")
     private Double total_order_amount;
-    private int order_status;
-    private int pay_status;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("orderStatus")
+    private Integer order_status;
+    @JsonProperty("payStatus")
+    private Integer pay_status;
+    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("createTime")
     private Date create_time;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("updateTime")
     private Date update_time;
-
-
-
+    @JsonProperty("orderDetailList")
+    private Set<Order_details> set;
 
 }
